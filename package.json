@@ -1,0 +1,17 @@
+{
+  "name": "adhd-simulator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "pixi.js": "^8.6.6",
+    "vite": "^6.0.7"
+  }
+}
