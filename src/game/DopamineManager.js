@@ -5,8 +5,9 @@ export class DopamineManager {
         this.currentDisplay = document.getElementById('current-dopamine');
         this.totalDisplay = document.getElementById('total-dopamine');
         this.onDopamineGained = null;
+        this.onDopamineUpdate = null;
         this.powerupBar = powerupBar;
-        this.button = null; // Reference to the button
+        this.button = null;
     }
 
     setButton(button) {
@@ -22,6 +23,10 @@ export class DopamineManager {
             this.onDopamineGained(amount);
         }
 
+        if (this.onDopamineUpdate) {
+            this.onDopamineUpdate(this.current);
+        }
+
         if (this.powerupBar) {
             this.powerupBar.update(this.current);
         }
@@ -34,6 +39,10 @@ export class DopamineManager {
             
             if (this.powerupBar) {
                 this.powerupBar.update(this.current);
+            }
+
+            if (this.onDopamineUpdate) {
+                this.onDopamineUpdate(this.current);
             }
             
             return true;

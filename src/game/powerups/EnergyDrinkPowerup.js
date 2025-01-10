@@ -17,6 +17,8 @@ export class EnergyDrinkPowerup extends Powerup {
         if (!this.purchased && this.dopamineManager.spendDopamine(this.cost)) {
             this.onPurchase();
             this.applyEffect();
+            // Tell PowerupBar to remove this powerup
+            this.dopamineManager.powerupBar.removePowerup(this);
         }
     }
 

@@ -6,6 +6,10 @@ export class Powerup {
         this.iconText = iconText;
         this.element = this.createPowerupElement();
         this.purchased = false;
+
+        // Store references to DOM elements we'll need to update
+        this.tooltipCost = null;
+        this.tooltipDescription = null;
     }
 
     createPowerupElement() {
@@ -25,22 +29,38 @@ export class Powerup {
         tooltipName.className = 'powerup-tooltip-name';
         tooltipName.textContent = this.name;
         
-        const tooltipCost = document.createElement('div');
-        tooltipCost.className = 'powerup-tooltip-cost';
-        tooltipCost.textContent = `${this.cost} dopamine`;
+        // Store reference to cost element
+        this.tooltipCost = document.createElement('div');
+        this.tooltipCost.className = 'powerup-tooltip-cost';
+        this.tooltipCost.textContent = `${this.cost} dopamine`;
         
-        const tooltipDesc = document.createElement('div');
-        tooltipDesc.className = 'powerup-tooltip-description';
-        tooltipDesc.textContent = this.description;
+        // Store reference to description element
+        this.tooltipDescription = document.createElement('div');
+        this.tooltipDescription.className = 'powerup-tooltip-description';
+        this.tooltipDescription.textContent = this.description;
         
         tooltip.appendChild(tooltipName);
-        tooltip.appendChild(tooltipCost);
-        tooltip.appendChild(tooltipDesc);
+        tooltip.appendChild(this.tooltipCost);
+        tooltip.appendChild(this.tooltipDescription);
         
         container.appendChild(icon);
         container.appendChild(tooltip);
         
         return container;
+    }
+
+    updateDescription(newDescription) {
+        this.description = newDescription;
+        if (this.tooltipDescription) {
+            this.tooltipDescription.textContent = newDescription;
+        }
+    }
+
+    updateCost(newCost) {
+        this.cost = newCost;
+        if (this.tooltipCost) {
+            this.tooltipCost.textContent = `${newCost} dopamine`;
+        }
     }
 
     update(currentDopamine) {
@@ -57,7 +77,6 @@ export class Powerup {
 
     onPurchase() {
         this.purchased = true;
-        this.element.classList.add('purchased');
-        this.element.classList.remove('can-afford', 'cannot-afford');
+        this.element.remove();
     }
 }
