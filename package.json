@@ -1,17 +1,16 @@
 {
   "name": "adhd-simulator",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "description": "",
   "dependencies": {
-    "pixi.js": "^8.6.6",
-    "vite": "^6.0.7"
+    "pixi.js": "^7.x.x"
+  },
+  "devDependencies": {
+    "vite": "^5.x.x"
   }
 }
