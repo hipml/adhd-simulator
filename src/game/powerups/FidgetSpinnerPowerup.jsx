@@ -3,66 +3,37 @@ import * as PIXI from 'pixi.js';
 
 export class FidgetSpinnerPowerup extends Powerup {
     static MAX_SPINNERS = 10;
-    static BASE_COST = 15;
     
-    constructor(dopamineManager, app) {
-        const currentCost = FidgetSpinnerPowerup.BASE_COST * Math.pow(2, dopamineManager.spinnerCount || 0);
+    constructor(dopamineManager, app, level) {
+        const cost = 15 * Math.pow(2, level - 1);  // 15, 30, 60, 120, etc.
         super(
-            "Fidget Spinner",
-            currentCost,
-            "A bouncing spinner that gives +5 dopamine on each bounce!",
+            `Fidget Spinner ${level}`,
+            cost,
+            `A bouncing spinner that gives +5 dopamine on each bounce! (${level}/${FidgetSpinnerPowerup.MAX_SPINNERS})`,
             "🌀"
         );
         
         this.dopamineManager = dopamineManager;
         this.app = app;
-        this.spinner = null;
-        this.speed = { x: 3, y: 2 };
-        
-        // Initialize spinner count if not exists
-        if (typeof this.dopamineManager.spinnerCount === 'undefined') {
-            this.dopamineManager.spinnerCount = 0;
-        }
-        
-        // Update tooltip to show spinner count
-        this.updateTooltip();
-        
-        this.element.addEventListener('click', () => this.tryPurchase());
-    }
+        this.level = level;
 
-    updateTooltip() {
-        const count = this.dopamineManager.spinnerCount;
-        const remainingSpinners = FidgetSpinnerPowerup.MAX_SPINNERS - count;
-        const nextCost = FidgetSpinnerPowerup.BASE_COST * Math.pow(2, count);
-        
-        this.updateDescription(
-            `A bouncing spinner that gives +5 dopamine on each bounce! ` +
-            `(${count}/${FidgetSpinnerPowerup.MAX_SPINNERS} owned)`
-        );
-        this.updateCost(nextCost);
+        // Add click event listener
+        this.element.addEventListener('click', () => {
+            console.log(`Clicked Fidget Spinner ${this.level}`);
+            this.tryPurchase();
+        });
     }
 
     tryPurchase() {
-        if (this.dopamineManager.spinnerCount >= FidgetSpinnerPowerup.MAX_SPINNERS) {
-            return; // Max spinners reached
-        }
-
         if (this.dopamineManager.spendDopamine(this.cost)) {
-            this.dopamineManager.spinnerCount++;
+            console.log(`Purchased Fidget Spinner ${this.level}`);
+            this.dopamineManager.incrementSpinnerCount();
             this.applyEffect();
-            
-            // Update cost for next purchase
-            const newCost = FidgetSpinnerPowerup.BASE_COST * Math.pow(2, this.dopamineManager.spinnerCount);
-            this.updateCost(newCost);
-            
-            // Update tooltip
-            this.updateTooltip();
-            
-            // Remove powerup if max count reached
-            if (this.dopamineManager.spinnerCount >= FidgetSpinnerPowerup.MAX_SPINNERS) {
-                this.dopamineManager.powerupBar.removePowerup(this);
-            }
+            this.purchased = true;
+            this.dopamineManager.powerupBar.removePowerup(this);
+            return true;
         }
+        return false;
     }
 
     createSpinner() {
@@ -100,11 +71,8 @@ export class FidgetSpinnerPowerup extends Powerup {
     }
 
     applyEffect() {
-        // Create and add the spinner to the stage
         const spinner = this.createSpinner();
         this.app.stage.addChild(spinner);
-
-        // Set up the animation loop for this specific spinner
         this.app.ticker.add(() => this.updateSpinner(spinner));
     }
 
