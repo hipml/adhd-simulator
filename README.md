@@ -26,6 +26,19 @@ A browser-based incremental game built with PixiJS and Vite that simulates dopam
 - Appears when within 10 dopamine of next purchase cost
 - Visual: Green spinning triangle that bounces around screen
 
+#### Rain
+- Cost: 50 dopamine
+- Effect: Creates a soothing rain animation that generates passive dopamine
+- Generates +1 dopamine per second
+- Visual: Blue raindrops falling across the screen
+- Includes ambient rain sound effects
+
+#### Rx (Prescription)
+- Cost: 100 dopamine
+- Effect: Doubles ALL dopamine gains from all sources
+- One-time purchase that affects all other powerups
+- Multiplicative effect on clicks, spinners, and rain
+
 ## Technical Structure
 
 ### Project Setup
@@ -47,24 +60,16 @@ adhd-simulator/
         └── powerups/
             ├── Powerup.js      # Base powerup class
             ├── EnergyDrinkPowerup.js
-            └── FidgetSpinnerPowerup.js
+            ├── FidgetSpinnerPowerup.jsx
+            ├── RainPowerup.js
+            └── RxPowerup.js
 ```
 
 ### Key Classes
 - `Game`: Main orchestrator, handles initialization and updates
-- `DopamineManager`: Tracks dopamine amounts and triggers events
+- `DopamineManager`: Tracks dopamine amounts, multipliers, and triggers events
 - `PowerupBar`: Manages powerup visibility and purchase opportunities
-- `Powerup`: Base class for all powerups with tooltip system
-
-### Current Issues
-1. Tooltip updates not working correctly for Fidget Spinner counts
-
-## Next Steps
-Possible improvements to consider:
-- Fix tooltip update system
-- Add more powerups
-- Implement visual effects for spinner bounces
-- Add sound effects
+- `Powerup`: Base class for all powerups with tooltip system and affordability indicators
 
 ## Setup Instructions
 1. Install dependencies: `npm install`
