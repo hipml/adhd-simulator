@@ -5,6 +5,7 @@ import { DopaminePopup } from './DopaminePopup.js';
 import { PowerupBar } from './PowerupBar.js';
 import { EnergyDrinkPowerup } from './powerups/EnergyDrinkPowerup.js';
 import { FidgetSpinnerPowerup } from './powerups/FidgetSpinnerPowerup.jsx';
+import { RainPowerup } from './powerups/RainPowerup.js';
 
 export class Game {
   constructor() {
@@ -27,6 +28,9 @@ export class Game {
     
     // Create energy drink powerup
     this.energyDrinkPowerup = new EnergyDrinkPowerup(this.dopamineManager);
+
+    // create Rain powerup
+    this.rainPowerup = new RainPowerup(this.dopamineManager, this.app);
     
     // Initialize current fidget spinner powerup as null
     this.currentFidgetSpinner = null;
@@ -53,6 +57,14 @@ export class Game {
       if (currentDopamine >= this.energyDrinkPowerup.cost - VISIBILITY_THRESHOLD && 
           !this.powerupBar.hasPowerup(this.energyDrinkPowerup)) {
         this.powerupBar.addPowerup(this.energyDrinkPowerup);
+      }
+    }
+
+    // Rain visibility
+    if (!this.rainPowerup.purchased) {
+      if (currentDopamine >= this.rainPowerup.cost - VISIBILITY_THRESHOLD && 
+          !this.powerupBar.hasPowerup(this.rainPowerup)) {
+        this.powerupBar.addPowerup(this.rainPowerup);
       }
     }
     
