@@ -6,6 +6,7 @@ import { PowerupBar } from './PowerupBar.js';
 import { EnergyDrinkPowerup } from './powerups/EnergyDrinkPowerup.js';
 import { FidgetSpinnerPowerup } from './powerups/FidgetSpinnerPowerup.jsx';
 import { RainPowerup } from './powerups/RainPowerup.js';
+import { RxPowerup } from './powerups/RxPowerup.js';
 
 export class Game {
   constructor() {
@@ -34,6 +35,8 @@ export class Game {
     
     // Initialize current fidget spinner powerup as null
     this.currentFidgetSpinner = null;
+
+    this.rxPowerup = new RxPowerup(this.dopamineManager);
     
     // Set up dopamine update handler for powerup visibility
     this.dopamineManager.onDopamineUpdate = (current) => {
@@ -80,6 +83,14 @@ export class Game {
           this.currentFidgetSpinner = new FidgetSpinnerPowerup(this.dopamineManager, this.app, nextSpinnerLevel);
           this.powerupBar.addPowerup(this.currentFidgetSpinner);
         }
+      }
+    }
+
+    // Rx visibility
+    if (!this.rxPowerup.purchased) {
+      if (currentDopamine >= this.rxPowerup.cost - VISIBILITY_THRESHOLD && 
+          !this.powerupBar.hasPowerup(this.rxPowerup)) {
+        this.powerupBar.addPowerup(this.rxPowerup);
       }
     }
   }

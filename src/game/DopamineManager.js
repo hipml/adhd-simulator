@@ -1,7 +1,6 @@
 export class DopamineManager extends EventTarget {
   constructor(powerupBar) {
     super(); // Initialize EventTarget
-    console.log('DopamineManager constructor called');
     
     this.current = 0;
     this.total = 0;
@@ -11,10 +10,10 @@ export class DopamineManager extends EventTarget {
     this.onDopamineUpdate = null;
     this.powerupBar = powerupBar;
     this.button = null;
+    this.dopamineMultiplier = 1;
     
     // Initialize spinner count
     this._spinnerCount = 0;
-    console.log('Initial spinner count:', this._spinnerCount);
   }
 
   setButton(button) {
@@ -22,21 +21,20 @@ export class DopamineManager extends EventTarget {
   }
 
   addDopamine(amount) {
-    console.log('Adding dopamine:', amount);
-    this.current += amount;
-    this.total += amount;
+    const multipliedAmount = Math.floor(amount * this.dopamineMultiplier);
+    this.current += multipliedAmount;
+    this.total += multipliedAmount;
     this.updateDisplay();
     
     // Legacy callbacks
     if (this.onDopamineGained) {
-      this.onDopamineGained(amount);
+      this.onDopamineGained(multipliedAmount);
     }
     if (this.onDopamineUpdate) {
       this.onDopamineUpdate(this.current);
     }
     
     // New event system
-    console.log('Dispatching dopamineGained event');
     this.dispatchEvent(new CustomEvent('dopamineGained', { 
       detail: { amount, current: this.current, total: this.total }
     }));
@@ -47,14 +45,9 @@ export class DopamineManager extends EventTarget {
   }
 
   spendDopamine(amount) {
-    console.log('Attempting to spend dopamine:', amount);
-    console.log('Current dopamine:', this.current);
-    
     if (this.current >= amount) {
       this.current -= amount;
       this.updateDisplay();
-      
-      console.log('Dopamine spent successfully, new amount:', this.current);
       
       if (this.powerupBar) {
         this.powerupBar.update(this.current);
@@ -69,7 +62,6 @@ export class DopamineManager extends EventTarget {
       
       return true;
     }
-    console.log('Not enough dopamine to spend');
     return false;
   }
 
@@ -79,20 +71,16 @@ export class DopamineManager extends EventTarget {
   }
 
   setSpinnerCount(count) {
-    console.log('Setting spinner count to:', count);
     this._spinnerCount = count;
     
-    console.log('Dispatching spinnerCountChanged event');
     this.dispatchEvent(new CustomEvent('spinnerCountChanged', {
       detail: { count: this._spinnerCount }
     }));
   }
 
   incrementSpinnerCount() {
-    console.log('Incrementing spinner count from:', this._spinnerCount);
     this._spinnerCount++;
     
-    console.log('Dispatching spinnerCountChanged event');
     this.dispatchEvent(new CustomEvent('spinnerCountChanged', {
       detail: { count: this._spinnerCount }
     }));
@@ -102,5 +90,9 @@ export class DopamineManager extends EventTarget {
 
   getSpinnerCount() {
     return this._spinnerCount;
+  }
+
+  addDopamineMultiplier(multiplier) {
+    this.dopamineMultiplier *= multiplier;
   }
 }
